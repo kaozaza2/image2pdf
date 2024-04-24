@@ -25,6 +25,8 @@ class Counter {
 }
 
 fun main() {
+    System.setProperty("file.encoding", "UTF8")
+
     while (true) {
         print("\u001b[H\u001b[2J")
         println("image2pdf")
@@ -209,14 +211,12 @@ fun File.checksum(): String? {
 fun File.imageFiles(): Array<File> {
     val jpgPaths = listOf("jpg", "jpeg", "JPG", "JPEG")
 
-    val jpgPath = jpgPaths
-        .map { path -> File(this, path) }
-        .find { it.exists() && it.isDirectory }
+    val jpgPath = jpgPaths.map { path -> File(this, path) }.find { it.exists() && it.isDirectory }
 
     requireNotNull(jpgPath) { "Not found or invalid jpg path inside episode dir." }
 
     val jpgFiles = jpgPath.listFiles { _, name ->
-        name.endsWith(".jpg", ignoreCase = true) || name.endsWith(".jpeg", ignoreCase = true)
+        name.endsWith(".jpg", true) || name.endsWith(".jpeg", true)
     }
 
     return jpgFiles ?: emptyArray()
@@ -233,7 +233,7 @@ fun File.files(filter: ((File) -> Boolean)? = null): Array<File> {
 }
 
 fun create(images: Array<File>, out: File) {
-    images.sortedBy { it.substringBeforeLast(".") }
+    images.sortedBy { it.nameWithoutExtension }
 
     Document().use { document ->
         PdfWriter.getInstance(document, FileOutputStream(out))
