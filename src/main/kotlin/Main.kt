@@ -236,6 +236,8 @@ val windowsComparator = Comparator<File> { a, b ->
     val aName = a.name.substringBeforeLast(".")
     val bName = b.name.substringBeforeLast(".")
 
+    // Natural order sort strings 001-1 comes before 001,
+    // but 001 should comes before 001-1, let's fix.
     when {
         bName.length > aName.length && bName.startsWith(aName) -> 1
         else -> naturalOrder<String>().compare(aName, bName)
