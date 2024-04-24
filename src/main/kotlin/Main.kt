@@ -233,7 +233,7 @@ fun File.files(filter: ((File) -> Boolean)? = null): Array<File> {
 }
 
 fun create(images: Array<File>, out: File) {
-    images.sortBy { it.substringBeforeLast(".") }
+    images.sortedBy { it.substringBeforeLast(".") }
 
     Document().use { document ->
         PdfWriter.getInstance(document, FileOutputStream(out))
